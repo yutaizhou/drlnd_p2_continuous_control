@@ -1,1 +1,1 @@
-# drlnd_p2_control
+# drlnd_p2_continuous_control
