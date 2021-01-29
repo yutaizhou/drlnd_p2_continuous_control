@@ -43,4 +43,4 @@ class Critic(nn.Module):
         x = torch.cat((state_input, action), dim=-1)
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
-        return 
+        return x
