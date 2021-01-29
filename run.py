@@ -41,7 +41,7 @@ def run(agent, agent_name, env: UnityEnvironment, num_episodes=10000, is_trainin
         scores.append(total_reward)
 
         if is_training:
-            if len(scores) > 100:
+            if len(scores) >= 100:
                 avg_score = np.mean(scores[-100:])
                 max_avg_score = max(max_avg_score, avg_score)
             
