@@ -15,18 +15,18 @@ def rollout(agent, env: UnityEnvironment, is_training: bool = True):
     
     states = env_info.vector_observations
     total_reward = 0
-    done = False
-    while not done:
+    ended = False
+    while not ended:
         actions = agent.act(states, is_training)
 
         env_info = env.step(actions)[brain_name]
         next_states, rewards, dones = env_info.vector_observations, np.array(env_info.rewards), np.array(env_info.local_done)
-
+        ended = False not in dones
         agent.step(states, actions, rewards, next_states, dones)
         states = next_states
-        total_reward += rewards.mean()
+        total_reward += rewards
 
-    return total_reward
+    return total_reward.mean()
 
 
 def run(agent, agent_name, env: UnityEnvironment, num_episodes=10000, is_training=True) -> List[float]:
