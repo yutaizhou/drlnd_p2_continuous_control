@@ -23,14 +23,18 @@ class ReplayBuffer:
         self.experience = namedtuple("Experience", field_names=["state", "action", "reward", "next_state", "done"])
         self.seed = random.seed(seed)
     
-    def add(self, state, action, reward, next_state, done):
+    def add(self, states, actions, rewards, next_states, dones):
         """Add a new experience to memory."""
-        e = self.experience(state, action, reward, next_state, done)
-        self.memory.append(e)
+        experiences = [self.experience(state, action, reward, next_state, done)\
+            for (state, action, reward, next_state, done)\
+            in zip(states, actions, rewards, next_states, dones)
+        ]
+        
+        [self.memory.append(e) for e in experiences]
     
-    def sample(self):
+    def sample(self, num_batches=1):
         """Randomly sample a batch of experiences from memory."""
-        experiences = random.sample(self.memory, k=self.batch_size)
+        experiences = random.sample(self.memory, k=self.batch_size * num_batches)
 
         states = torch.from_numpy(np.vstack([e.state for e in experiences if e is not None])).float().to(DEVICE)
         actions = torch.from_numpy(np.vstack([e.action for e in experiences if e is not None])).float().to(DEVICE)
