@@ -1,7 +1,6 @@
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
-import torch
 from unityagents import UnityEnvironment
 
 from src.agents.agent import DDPG
@@ -13,18 +12,18 @@ def rollout(agent, env: UnityEnvironment, is_training: bool = True):
     # completes one episode of rollout, is_training functionality not really fully fledged out
     env_info = env.reset(train_mode=True)[brain_name] 
     
-    state = env_info.vector_observations[0]
+    states = env_info.vector_observations
     total_reward = 0
     done = False
     while not done:
-        action = agent.act(state, is_training)
+        actions = agent.act(states, is_training)
 
-        env_info = env.step(action)[brain_name]
-        next_state, reward, done = env_info.vector_observations[0], env_info.rewards[0], env_info.local_done[0]  
+        env_info = env.step(actions)[brain_name]
+        next_states, rewards, dones = env_info.vector_observations, np.array(env_info.rewards), np.array(env_info.local_done)
 
-        agent.step(state, action, reward, next_state, done)
-        state = next_state
-        total_reward += reward
+        agent.step(states, actions, rewards, next_states, dones)
+        states = next_states
+        total_reward += rewards.mean()
 
     return total_reward
 
@@ -67,14 +66,17 @@ if __name__ == "__main__":
     env = UnityEnvironment(file_name="src/envs/Reacher_Linux_NoVis/Reacher.x86_64")
     brain_name = env.brain_names[0]
     brain = env.brains[brain_name]
-
     env_info = env.reset(train_mode=True)[brain_name]
+
+
+    # set up agent
     action_size = brain.vector_action_space_size
     state_size = len(env_info.vector_observations[0])
+    num_agents = len(env_info.agents)
 
     algorithms = {'DDPG': DDPG}
     algorithm = algorithms[args.algorithm]
-    agent = algorithm(state_size, action_size)
+    agent = algorithm(state_size, action_size, num_agents)
 
     scores = run(agent, args.algorithm, env, num_episodes=2000)
 
