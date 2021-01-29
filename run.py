@@ -84,9 +84,9 @@ if __name__ == "__main__":
     # plot the scores
     fig = plt.figure()
     ax = fig.add_subplot(111)
-    plt.plot(np.arange(len(scores)), scores)
+    plt.plot(np.arange(start=1, stop=len(scores)+1), scores)
     plt.ylabel('Score')
     plt.xlabel('Episode #')
-    fig.savefig(f'results/{agent}/result.png')
+    fig.savefig(f'results/{args.algorithm}/result.png')
     plt.close(fig)
 
