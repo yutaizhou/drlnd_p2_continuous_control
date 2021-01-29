@@ -1,6 +1,7 @@
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
+from tqdm import trange
 from unityagents import UnityEnvironment
 
 from src.agents.agent import DDPG
@@ -35,7 +36,7 @@ def run(agent, agent_name, env: UnityEnvironment, num_episodes=10000, is_trainin
 
     logger = Logger(f'results/{agent_name}/progress.txt')
     logger.write(f'Progress for {agent_name} agent\n')
-    for i_episode in range(1, num_episodes+1):
+    for i_episode in trange(1, num_episodes+1):
         total_reward = rollout(agent, env, is_training)
         scores.append(total_reward)
 
