@@ -1,3 +1,4 @@
+import argparse
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
@@ -28,13 +29,13 @@ def rollout(agent, env: UnityEnvironment, is_training: bool = True):
     return total_reward
 
 
-def run(agent, env: UnityEnvironment, num_episodes=10000, is_training=True) -> List[float]:
+def run(agent, agent_name, env: UnityEnvironment, num_episodes=10000, is_training=True) -> List[float]:
     scores = []
     max_avg_score = -np.inf
     solved = False
 
-    logger = Logger(f'results/DDPG/progress.txt')
-    logger.write(f'Progress for DDPG agent\n')
+    logger = Logger(f'results/{agent_name}/progress.txt')
+    logger.write(f'Progress for {agent_name} agent\n')
     for i_episode in range(1, num_episodes+1):
         total_reward = rollout(agent, env, is_training)
         scores.append(total_reward)
@@ -51,14 +52,17 @@ def run(agent, env: UnityEnvironment, num_episodes=10000, is_training=True) -> L
                 solved = True
 
     logger.close()
-    torch.save(agent.Q_local.state_dict(), f'results/{agent}/checkpoint.pth')
-    with open(f'results/{agent}/scores.npy', 'wb') as f:
+    agent.save(f'results/{agent_name}/checkpoint.pth')
+    with open(f'results/{agent_name}/scores.npy', 'wb') as f:
         np.save(f, scores)
-
     return scores
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='This is a runner for DRLND Project 2: Continuous Control')
+    parser.add_argument('algorithm', type=str)
+    args = parser.parse_args()
+
     # set up env
     env = UnityEnvironment(file_name="src/envs/Reacher_Linux_NoVis/Reacher.x86_64")
     brain_name = env.brain_names[0]
@@ -69,10 +73,10 @@ if __name__ == "__main__":
     state_size = len(env_info.vector_observations[0])
 
     algorithms = {'DDPG': DDPG}
-    algorithm = DDPG 
+    algorithm = algorithms[args.algorithm]
     agent = algorithm(state_size, action_size)
 
-    scores = run(agent, env, num_episodes=2000)
+    scores = run(agent, args.algorithm, env, num_episodes=2000)
 
     # plot the scores
     fig = plt.figure()

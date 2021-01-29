@@ -13,7 +13,7 @@ from ..utils.utils import DEVICE
 
 
 BUFFER_SIZE = int(1e6)  # replay buffer size
-BATCH_SIZE = 128        # minibatch size
+BATCH_SIZE = 512        # minibatch size
 GAMMA = 0.99            # discount factor
 TAU = 1e-3              # for soft update of target parameters
 LR_ACTOR = 1e-4         # learning rate of the actor 
@@ -45,7 +45,7 @@ class DDPG():
         self.memory.add(state, action, reward, next_state, done)
         if len(self.memory) > BATCH_SIZE:
             experiences = self.memory.sample()
-            self.learn(experiences, GAMMA)
+            self._learn(experiences, GAMMA)
 
     def act(self, state, add_noise=True):
         state = torch.from_numpy(state).float().to(DEVICE)
@@ -62,7 +62,7 @@ class DDPG():
     def reset(self):
         self.noise.reset()
     
-    def learn(self, experiences, gamma):
+    def _learn(self, experiences, gamma):
         states, actions, rewards, next_states, dones = experiences
 
         # update critic
@@ -87,13 +87,18 @@ class DDPG():
 
 
         # target network upates
-        self.soft_update(self.actor_local, self.actor_target, TAU)
-        self.soft_update(self.critic_local, self.critic_target, TAU)
+        self._soft_update(self.actor_local, self.actor_target, TAU)
+        self._soft_update(self.critic_local, self.critic_target, TAU)
     
-    def soft_update(self, local_model, target_model, tau):
+    def _soft_update(self, local_model, target_model, tau):
         for target_param, local_param in zip(target_model.parameters(), local_model.parameters()):
             mixed_param = tau * local_param.data + (1-tau)*target_param.data
             target_param.data.copy_(mixed_param)
-
-
+    
+    def save(self, fp: str):
+        models = {
+                'actor': self.actor_local.state_dict(),
+                'critic': self.critic_local.state_dict()
+        }
+        torch.save(models, fp)
 
