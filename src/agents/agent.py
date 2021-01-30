@@ -14,11 +14,12 @@ from ..utils.utils import DEVICE
 
 BUFFER_SIZE = int(1e6)  # replay buffer size
 BATCH_SIZE = 256        # minibatch size
-GAMMA = 0.99            # discount factor
+GAMMA = 0.95            # discount factor
 LR_ACTOR = 1e-4         # learning rate of the actor 
 LR_CRITIC = 1e-3        # learning rate of the critic
 TAU = 1e-3              # for soft update of target parameters
 WEIGHT_DECAY = 0   # L2 weight decay
+TRAIN_FREQ = 20 # update net work after this many time steps
 
 
 class DDPG():
@@ -45,7 +46,7 @@ class DDPG():
     
     def step(self, state, action, reward, next_state, done):
         self.memory.add(state, action, reward, next_state, done)
-        if (self.t % 20 == 0) & (len(self.memory) > BATCH_SIZE * self.num_batches):
+        if (self.t % TRAIN_FREQ == 0) & (len(self.memory) > BATCH_SIZE * self.num_batches):
             experiences = self.memory.sample(self.num_batches)
             self._learn(experiences, GAMMA)
         self.t += 1
@@ -81,7 +82,7 @@ class DDPG():
         for states, actions, rewards, next_states, dones in zip(b_states, b_actions, b_rewards, b_next_states, b_dones):
             # update critic
             actions_next = self.actor_target(next_states)
-            Q_targets_next = self.critic_target(next_states, actions_next)
+            Q_targets_next = self.critic_target(next_states, actions_next).detach()
             Q_targets = rewards + gamma * Q_targets_next * (1-dones)
 
             Q_expected = self.critic_local(states, actions)
@@ -101,8 +102,8 @@ class DDPG():
             self.actor_opt.step()
 
             # target network upates
-        self._soft_update(self.actor_local, self.actor_target, TAU)
-        self._soft_update(self.critic_local, self.critic_target, TAU)
+            self._soft_update(self.actor_local, self.actor_target, TAU)
+            self._soft_update(self.critic_local, self.critic_target, TAU)
     
     @staticmethod
     def _soft_update(local_model, target_model, tau):
