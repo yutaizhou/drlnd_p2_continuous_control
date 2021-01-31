@@ -18,8 +18,8 @@ GAMMA = 0.95            # discount factor
 LR_ACTOR = 1e-4         # learning rate of the actor 
 LR_CRITIC = 1e-3        # learning rate of the critic
 TAU = 1e-3              # for soft update of target parameters
-WEIGHT_DECAY = 0   # L2 weight decay
-TRAIN_FREQ = 20 # update net work after this many time steps
+WEIGHT_DECAY = 0        # L2 weight decay
+TRAIN_FREQ = 20         # update net work every this many time steps
 
 
 class DDPG():
