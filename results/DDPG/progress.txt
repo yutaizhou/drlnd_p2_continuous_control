@@ -1,0 +1,22 @@
+Progress for DDPG agent
+Episode 100/2000 | Max Average Score: 2.098109953103587
+Episode 200/2000 | Max Average Score: 5.5369498762395235
+Episode 300/2000 | Max Average Score: 11.069089752586558
+Episode 400/2000 | Max Average Score: 18.778359580270944
+Episode 500/2000 | Max Average Score: 29.719484335717745
+Task solved in 503 episodes, with average score over the last 100 episode: 30.104349327115344
+Episode 600/2000 | Max Average Score: 36.71720917930641
+Episode 700/2000 | Max Average Score: 36.72169417920615
+Episode 800/2000 | Max Average Score: 36.72169417920615
+Episode 900/2000 | Max Average Score: 37.30040416627098
+Episode 1000/2000 | Max Average Score: 37.30040416627098
+Episode 1100/2000 | Max Average Score: 37.30040416627098
+Episode 1200/2000 | Max Average Score: 37.30040416627098
+Episode 1300/2000 | Max Average Score: 37.372089164668694
+Episode 1400/2000 | Max Average Score: 37.645219158563755
+Episode 1500/2000 | Max Average Score: 37.645219158563755
+Episode 1600/2000 | Max Average Score: 37.645219158563755
+Episode 1700/2000 | Max Average Score: 37.645219158563755
+Episode 1800/2000 | Max Average Score: 37.645219158563755
+Episode 1900/2000 | Max Average Score: 37.645219158563755
+Episode 2000/2000 | Max Average Score: 37.645219158563755

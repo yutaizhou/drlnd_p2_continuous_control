@@ -54,7 +54,7 @@ DDPG could be further extended by n-step returns. The Q-learning update rule it 
 
 DDPG is an off-policy actor-critic algorithm. Another state of the art off-policy algorithm is the [SAC](sac_paper), which is worth trying. It comes from the field of maximum entropy reinforcement learning. 
 
-On-policy algorithms such as [PPO](ppo_paper) and [TRPO](trpo_paper) have shown major improvements in the performance since the DDPG paper, and are also worth implementing.
+On-policy algorithms such as [PPO](ppo_paper) and [TRPO](trpo_paper) have shown major improvements in performance since the DDPG paper, and are also worth implementing.
 
 <!-- Links -->
 [reward_plot]: https://github.com/yutaizhou/drlnd_p2_navigation/blob/master/results/DDPG/result.png
