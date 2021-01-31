@@ -57,7 +57,7 @@ DDPG is an off-policy actor-critic algorithm. Another state of the art off-polic
 On-policy algorithms such as [PPO](ppo_paper) and [TRPO](trpo_paper) have shown major improvements in performance since the DDPG paper, and are also worth implementing.
 
 <!-- Links -->
-[reward_plot]: https://github.com/yutaizhou/drlnd_p2_navigation/blob/master/results/DDPG/result.png
+[reward_plot]: https://github.com/yutaizhou/drlnd_p2_continuous_control/blob/main/results/DDPG/result.png
 [ddpg_paper]: https://arxiv.org/abs/1509.02971
 [dqn_paper]: https://www.nature.com/articles/nature14236
 [pg_paper]: https://dl.acm.org/doi/10.5555/3009657.3009806
