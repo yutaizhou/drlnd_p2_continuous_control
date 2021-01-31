@@ -37,6 +37,10 @@ class DDPG():
         self.critic_local = Critic(state_size, action_size, seed=random_seed).to(DEVICE)
         self.critic_target = Critic(state_size, action_size, seed=random_seed).to(DEVICE)
         self.critic_opt = optim.Adam(self.critic_local.parameters(), lr=LR_CRITIC, weight_decay=WEIGHT_DECAY)
+
+        # ensure local and target networks start with same weights
+        self._soft_update(self.actor_local, self.actor_target, 1)
+        self._soft_update(self.critic_local, self.critic_target, 1)
     
         # Misc
         self.noise = OUNoise((num_agents, action_size), random_seed)
@@ -107,7 +111,7 @@ class DDPG():
     
     @staticmethod
     def _soft_update(local_model, target_model, tau):
-        for target_param, local_param in zip(target_model.parameters(), local_model.parameters()):
+        for local_param, target_param in zip(local_model.parameters(), target_model.parameters()):
             mixed_param = tau * local_param.data + (1-tau)*target_param.data
             target_param.data.copy_(mixed_param)
     
